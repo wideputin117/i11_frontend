@@ -1,10 +1,12 @@
 'use client';
 import DeleteModal from '@/components/DeleteModal';
+import DriversDetailsModal from '@/components/DriversDetailsModal';
 import DriversUpdateModal from '@/components/DriversUpdateModal';
 import { axiosInstance } from '@/utils/axiosInstance';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { Search, Plus, UserPlus } from 'lucide-react'
 
 const Page = () => {
   const [driverData, setDriverData] = useState([]);
@@ -27,7 +29,10 @@ const Page = () => {
     setUpdateModal(true)
   }
 
-
+const handleShowDetails =(data)=>{
+  setUpdateData(data)
+  setDetailsModal(true)
+}
   const handlePageChange = (page) => {
     if (page > 0 && page <= paginate?.totalPages) {
       setCurrentPage(page);
@@ -60,20 +65,32 @@ const Page = () => {
       <h2 className="text-2xl font-semibold mb-4">Drivers</h2>
 
       {/* Search */}
-      <input
-        type="text"
-        value={search}
-        onChange={(e) => {
-          setSearch(e.target.value);
-          setCurrentPage(1);
-        }}
-        placeholder="Search drivers..."
-        className="mb-4 px-4 py-2 border rounded-md w-full sm:w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
+  <div className='flex flex-col sm:flex-row gap-4 mb-6 items-start sm:items-center justify-between'>
+      {/* Search Input */}
+      <div className="relative flex-1 max-w-md">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setCurrentPage(1);
+          }}
+          placeholder="Search drivers..."
+          className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-700 placeholder-gray-400"
+        />
+      </div>
 
-      <Link href={`/dashboard/drivers/add-driver`} >
-      Add a Driver
+      {/* Add Driver Button */}
+      <Link 
+        href={`/dashboard/drivers/add-driver`} 
+        className='inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 whitespace-nowrap'
+      >
+        <UserPlus className="w-4 h-4" />
+        Add Driver
       </Link>
+    </div>
+     
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="min-w-full border border-gray-300 rounded-md">
@@ -107,7 +124,7 @@ const Page = () => {
                   <td className="p-3">{driver?.state}</td>
                   <td className="p-3">{driver?.experience} yrs</td>
                   <td className="p-3 space-x-2">
-                    <button onClick={()=>handleUpdate(driver)} className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs">
+                    <button onClick={()=>handleShowDetails(driver)} className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs">
                       View
                     </button>
                    <button onClick={() => handleUpdate(driver)} className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-xs">
@@ -158,6 +175,7 @@ const Page = () => {
 
 
        {/** modals section is */}
+       {detailsModal && <DriversDetailsModal data={updateData} closeModal={setDetailsModal} />}
       {updateModal && <DriversUpdateModal updateData={updateData} setDriverData={setDriverData} closeModal={setUpdateModal} search={search} currentPage={currentPage}  />}
       
       {deleteModal && <DeleteModal id={id} type='driver' setDeleteModal={setDeleteModal} setData={setDriverData} search={search} currentPage={currentPage} setPaginate={setPaginate} /> }
