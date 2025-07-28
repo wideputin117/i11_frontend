@@ -1,9 +1,14 @@
-import React from 'react'
+'use client';  // needed if you plan to use interactivity/hooks
 
-const page = () => {
+import React from 'react';
+
+const DashboardPage = () => {
   return (
-    <div>dashbaord</div>
-  )
-}
+    <div>
+      <h1 className="text-2xl font-semibold">Dashboard</h1>
+      <p>Welcome to the admin dashboard!</p>
+    </div>
+  );
+};
 
-export default page
+export default DashboardPage;

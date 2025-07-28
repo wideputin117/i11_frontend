@@ -20,7 +20,7 @@ const CompanyFormPage = () => {
         try {
             const res = await axiosInstance.post(`/api/v1/admin/company`, data)
             console.log('the res is', res)
-            if(res?.data?.status== true){
+            if(res?.status== 201){
                 toast("Company Added successfully")
                 setSuccessMsg('Company added successfully!')
                 reset()

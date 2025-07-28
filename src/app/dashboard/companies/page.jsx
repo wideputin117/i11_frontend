@@ -53,6 +53,7 @@ const Page = () => {
 
     fetchCompanies();
   }, [currentPage, search]);
+console.log("the updated data is", companyData)
 
   return (
     <div className="p-6">
@@ -149,7 +150,6 @@ const Page = () => {
 
       {/** update modals are */}
       {updateModal && <CompanyUpdateModal setPaginate={setPaginate} updateData={updateData} setCompanyData={setCompanyData} closeModal={setUpdateModal} search={search} currentPage={currentPage} />}
-
       {deleteModal && <DeleteModal setPaginate={setPaginate} setDeleteModal={setDeleteModal} setData={setCompanyData} search={search} currentPage={currentPage}  id={id} type='company' />}
     </div>
   );

@@ -39,11 +39,12 @@ const CompanyUpdateModal = ({ updateData, setCompanyData, closeModal, search, cu
                     `/api/v1/admin/company?search=${search}&limit=10&page=${currentPage}`
                 );
                 if (response?.data?.success == true) {
-                    setCompanyData(response?.data?.data|| [])
+                    console.log("the response is", response)
+                    setCompanyData(response?.data?.data || [])
                     setPaginate(response?.data?.paginate || {})
+                    closeModal(false)
                 }
-                closeModal(false)
-            } else {
+             } else {
                 toast.error('Failed to update the Company information')
             }
         } catch (error) {
