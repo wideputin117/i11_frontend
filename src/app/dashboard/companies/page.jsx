@@ -3,6 +3,7 @@
 
 'use client';
 
+import CompanyDetails from '@/components/CompanyDetails';
 import CompanyUpdateModal from '@/components/CompanyUpdateModal';
 import DeleteModal from '@/components/DeleteModal';
 import { axiosInstance } from '@/utils/axiosInstance';
@@ -27,8 +28,12 @@ const Page = () => {
     setId(id)
     setDeleteModal(true)
   }
-
-
+  
+  const handleShowDetails =(data)=>{
+    setUpdateData(data)
+    setDetailsModal(true)
+  }
+   
   const handlePageChange = (page) => {
     if (page > 0 && page <= paginate?.totalPages) {
       setCurrentPage(page);
@@ -101,7 +106,7 @@ console.log("the updated data is", companyData)
                     {company?.primary_contact_firstname} {company?.primary_contact_lastname}
                   </td>
                   <td className="p-3 space-x-2">
-                    <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs">
+                    <button onClick={()=>handleShowDetails(company)} className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs">
                       View
                     </button>
                     <button onClick={()=> handleUpdate(company)} className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-xs">
@@ -149,6 +154,7 @@ console.log("the updated data is", companyData)
       )}
 
       {/** update modals are */}
+      {detailsModal && <CompanyDetails closeModal={setDetailsModal} data={updateData} />}
       {updateModal && <CompanyUpdateModal setPaginate={setPaginate} updateData={updateData} setCompanyData={setCompanyData} closeModal={setUpdateModal} search={search} currentPage={currentPage} />}
       {deleteModal && <DeleteModal setPaginate={setPaginate} setDeleteModal={setDeleteModal} setData={setCompanyData} search={search} currentPage={currentPage}  id={id} type='company' />}
     </div>
