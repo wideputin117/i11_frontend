@@ -15,8 +15,9 @@ const CompanyFormPage = () => {
         reset,
         formState: { errors },
     } = useForm()
-
+    const [isLoading,setIsLoading] = useState(false)
     const onSubmit = async (data) => {
+        setIsLoading(true)
         try {
             const res = await axiosInstance.post(`/api/v1/admin/company`, data)
             console.log('the res is', res)
@@ -28,6 +29,8 @@ const CompanyFormPage = () => {
          } catch (error) {
             toast.error("Failed to add the company")
             setErrorMsg(error?.response?.data?.message || 'Failed to add company')
+        }finally{
+            setIsLoading(false)
         }
     }
 
@@ -210,12 +213,13 @@ const CompanyFormPage = () => {
                      <div className="flex justify-center pt-8 border-t border-gray-200">
                         <button
                             type="submit"
+                            disabled={isLoading}
                             className="group relative overflow-hidden bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 hover:from-indigo-700 hover:via-purple-700 hover:to-indigo-800 text-white font-bold px-12 py-4 rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center space-x-3"
                         >
-                            <span className="relative z-10">Submit Company</span>
-                            <svg className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <span className="relative z-10">{isLoading? "Adding Company...":"Submit Company"} </span>
+                            {/* <svg className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-                            </svg>
+                            </svg> */}
                             <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
                         </button>
                     </div>

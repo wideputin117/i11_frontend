@@ -1,7 +1,7 @@
 'use client'
 
 import { axiosInstance } from '@/utils/axiosInstance'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 
@@ -21,9 +21,10 @@ const DriversUpdateModal = ({ updateData, closeModal,setDriverData,search, curre
         }
     }, [updateData, setValue])
 
+    const [isLoading,setIsLoading]= useState(false)
     const onSubmit = async (data) => {
         console.log('Updated Driver Data:', data)
-
+         setIsLoading(true)
          try {
             const res= await axiosInstance.patch(`/api/v1/admin/drivers/${updateData?._id}`, data, {
                 headers:{
@@ -46,6 +47,8 @@ const DriversUpdateModal = ({ updateData, closeModal,setDriverData,search, curre
          } catch (error) {
             console.error('the error is', error)
             toast.error('Something went wrong', error)
+         }finally{
+            setIsLoading(false)
          }
      }
 
@@ -75,8 +78,8 @@ const DriversUpdateModal = ({ updateData, closeModal,setDriverData,search, curre
                     <input {...register('zipcode')} placeholder="Zip Code" className="input" />
 
                     <div className="col-span-full flex justify-end mt-4">
-                        <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
-                            Update
+                        <button disabled={isLoading} type="submit" className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+                            {isLoading ? <span>Updating...</span>:<span>Update</span>}
                         </button>
                     </div>
                 </form>

@@ -1,7 +1,7 @@
 'use client'
 
 import { axiosInstance } from "@/utils/axiosInstance"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 
@@ -21,11 +21,11 @@ const CompanyUpdateModal = ({ updateData, setCompanyData, closeModal, search, cu
                 })
             }
         }, [updateData, setValue])
-
+const [isLoading, setIsLoading] = useState(false)
 
     const onSubmit = async (data) => {
         console.log('Updated Driver Data:', data)
-
+        setIsLoading(true)
         try {
             const res = await axiosInstance.patch(`/api/v1/admin/companies/${updateData?._id}`, data, {
                 headers: {
@@ -50,6 +50,8 @@ const CompanyUpdateModal = ({ updateData, setCompanyData, closeModal, search, cu
         } catch (error) {
             console.error('the error is', error)
             toast.error('Something went wrong', error)
+        }finally{
+            setIsLoading(false)
         }
     }
   return (
@@ -218,9 +220,10 @@ const CompanyUpdateModal = ({ updateData, setCompanyData, closeModal, search, cu
                           <div className="flex justify-end pt-8 border-t border-gray-200">
                               <button
                                   type="submit"
+                                  disabled={isLoading}
                                   className="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 hover:from-indigo-700 hover:via-purple-700 hover:to-indigo-800 text-white font-semibold px-6 py-3 md:px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2"
                               >
-                                  <span>Update Company</span>
+                                 { isLoading ? <><span>Updating...</span></> :<span>Update Company</span>}
                                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                                   </svg>
