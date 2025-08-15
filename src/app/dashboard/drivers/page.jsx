@@ -7,6 +7,7 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Search, Plus, UserPlus } from 'lucide-react'
+import useDebounce from '@/utils/debounce';
 
 const Page = () => {
   const [driverData, setDriverData] = useState([]);
@@ -18,7 +19,7 @@ const Page = () => {
   const [deleteModal, setDeleteModal] = useState(false)
   const [detailsModal, setDetailsModal] = useState(false)
   const [id, setId]= useState(null)  
-  
+  const debounceSearch = useDebounce(search, 500)
   const handleDelete = async (id) => {
     setId(id)
     setDeleteModal(true)
@@ -43,7 +44,7 @@ const handleShowDetails =(data)=>{
     const fetchDrivers = async () => {
       try {
         const response = await axiosInstance.get(
-          `/api/v1/admin/driver?search=${search}&limit=10&page=${currentPage}`
+          `/api/v1/admin/driver?search=${debounceSearch}&limit=10&page=${currentPage}`
         );
 
         if (response?.data?.success === true) {
@@ -57,8 +58,9 @@ const handleShowDetails =(data)=>{
       }
     };
 
-    fetchDrivers();
-  }, [currentPage, search]);
+    fetchDrivers()
+    ;
+  }, [currentPage, debounceSearch]);
 
   return (
     <div className="p-6">

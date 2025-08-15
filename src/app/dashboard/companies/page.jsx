@@ -10,6 +10,7 @@ import { axiosInstance } from '@/utils/axiosInstance';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { Search, Plus, Building2 } from 'lucide-react'
+import useDebounce from '@/utils/debounce';
 
 const Page = () => {
   const [companyData, setCompanyData] = useState([]);
@@ -21,6 +22,8 @@ const Page = () => {
   const [deleteModal, setDeleteModal] = useState(false)
   const [detailsModal, setDetailsModal] = useState(false)
   const [id, setId]= useState(null)  
+  const debounceSearch = useDebounce(search,500)
+
   const handleUpdate = async (data) => {
     setUpdateData(data)
     setUpdateModal(true)
@@ -45,7 +48,7 @@ const Page = () => {
     const fetchCompanies = async () => {
       try {
         const response = await axiosInstance.get(
-          `/api/v1/admin/company?search=${search}&limit=10&page=${currentPage}`
+          `/api/v1/admin/company?search=${debounceSearch}&limit=10&page=${currentPage}`
         );
 
         if (response?.data?.success === true) {
@@ -56,9 +59,9 @@ const Page = () => {
         console.error('Error fetching companies:', error);
       }
     };
-
-    fetchCompanies();
-  }, [currentPage, search]);
+  
+    fetchCompanies()
+  }, [currentPage, debounceSearch]);
 console.log("the updated data is", companyData)
 
   return (

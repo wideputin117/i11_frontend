@@ -24,7 +24,7 @@ const [isLoading, setIsLoading]= useState(false)
                 }
             })
             console.log('the res is', res)
-            if (res?.data?.status == true) {
+            if (res?.data?.success == true) {
                 toast("Driver Added successfully")
                 setSuccessMsg('Driver added successfully!')
                 reset()
